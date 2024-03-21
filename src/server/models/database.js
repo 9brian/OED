@@ -15,6 +15,7 @@ const pgp = require('pg-promise')({
 const path = require('path');
 const patchMomentType = require('./patch-moment-type');
 const patchPointType = require('./patch-point-type');
+const WeatherLocation = require('./WeatherLocation');
 
 patchMomentType(pgp);
 patchPointType(pgp);
@@ -84,6 +85,7 @@ async function createSchema(conn) {
 	const Unit = require('./Unit');
 	const Conversion = require('./Conversion');
 	const Cik = require('./Cik');
+	// const WeatherLocation = require('./WeatherLocation');
 
 	/* eslint-enable global-require */
 	await Unit.createUnitTypesEnum(conn);
@@ -94,6 +96,7 @@ async function createSchema(conn) {
 	await Conversion.createTable(conn);
 	await Cik.createTable(conn);
 	await Meter.createMeterTypesEnum(conn);
+	// await WeatherLocation.createTable(conn);
 	// This sql code creates a function to check meter's timezone.
 	// It needs to be called before meter table is created.
 	await conn.none(sqlFile('meter/check_timezone.sql'));
