@@ -5,7 +5,7 @@
 CREATE TABLE IF NOT EXISTS weather_location(
   id SERIAL PRIMARY KEY NOT NULL,
   identifier VARCHAR(255),
-  longitude FLOAT,
   latitude FLOAT,
+  longitude FLOAT,
   note TEXT
 )

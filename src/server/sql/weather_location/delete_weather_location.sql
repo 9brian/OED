@@ -4,4 +4,4 @@
 
 DELETE 
 FROM weather_location 
-WHERE id = ${weather_location_id};
+WHERE id = ${id};
