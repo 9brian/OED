@@ -3,5 +3,5 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 UPDATE weather_location
-SET note = '${newNote}'
+SET note = '${note}'
 WHERE identifier = '${identifier}';
