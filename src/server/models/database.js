@@ -86,6 +86,7 @@ async function createSchema(conn) {
 	const Conversion = require('./Conversion');
 	const Cik = require('./Cik');
 	// const WeatherLocation = require('./WeatherLocation');
+	// const WeatherData = require('./WeatherData')
 
 	/* eslint-enable global-require */
 	await Unit.createUnitTypesEnum(conn);
