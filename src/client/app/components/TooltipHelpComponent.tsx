@@ -46,6 +46,7 @@ export default function TooltipHelpComponent(props: TooltipHelpProps) {
 		'help.admin.unitedit': { link: `${helpUrl}/adminUnitEditing.html` },
 		'help.admin.unitview': { link: `${helpUrl}/adminUnitViewing.html` },
 		'help.admin.user': { link: `${helpUrl}/adminUser.html` },
+		'help.admin.weatherview': { link: `${helpUrl}/` }, // NEEDS HELP LINK
 		'help.csv.header': { link: `${helpUrl}/adminDataAcquisition.html` },
 		'help.home.area.normalize': { link: `${helpUrl}/areaNormalization.html` },
 		'help.home.bar.custom.slider.tip': { link: `${helpUrl}/barGraphic.html#usage` },
