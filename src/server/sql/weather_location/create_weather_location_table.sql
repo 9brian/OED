@@ -8,4 +8,4 @@ CREATE TABLE IF NOT EXISTS weather_location(
   latitude FLOAT NOT NULL,
   longitude FLOAT NOT NULL,
   note TEXT
-)
+);
