@@ -72,6 +72,8 @@ function sqlFile(filePath) {
 async function createSchema(conn) {
 	// We need to require these here instead of at the top to prevent circular dependency issues.
 	/* eslint-disable global-require */
+	// const WeatherLocation = require('./WeatherLocation');
+	// const WeatherData = require('./WeatherData');
 	const Meter = require('./Meter');
 	const Reading = require('./Reading');
 	const User = require('./User');
@@ -85,8 +87,6 @@ async function createSchema(conn) {
 	const Unit = require('./Unit');
 	const Conversion = require('./Conversion');
 	const Cik = require('./Cik');
-	// const WeatherLocation = require('./WeatherLocation');
-	// const WeatherData = require('./WeatherData')
 
 	/* eslint-enable global-require */
 	await Unit.createUnitTypesEnum(conn);
@@ -97,10 +97,10 @@ async function createSchema(conn) {
 	await Conversion.createTable(conn);
 	await Cik.createTable(conn);
 	await Meter.createMeterTypesEnum(conn);
-	// await WeatherLocation.createTable(conn);
 	// This sql code creates a function to check meter's timezone.
 	// It needs to be called before meter table is created.
 	await conn.none(sqlFile('meter/check_timezone.sql'));
+	// await WeatherLocation.createTable(conn);
 	await Meter.createTable(conn);
 	await Reading.createReadingLineAccuracyEnum(conn);
 	await Reading.createTable(conn);
