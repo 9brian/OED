@@ -9,15 +9,17 @@
 // Attribution
 // <a href="https://open-meteo.com/">Weather data by Open-Meteo.com</a>
 
+// TODO: Fetch data by user gps/ user input
 const { fetchWeatherApi } = require('openmeteo');
 
 const params = {
-    "latitude": 52.52,
-    "longitude": 13.41,
+    "latitude": 36.6537,
+    "longitude": 121.799,
     "start_date": "2024-02-25",
-    "end_date": "2024-03-10",
+    "end_date": "2024-02-25",
     "hourly": "temperature_2m",
-    "temperature_unit": "fahrenheit"
+    "temperature_unit": "fahrenheit",
+    "timezone": "America/Los_Angeles"
 };
 const url = "https://archive-api.open-meteo.com/v1/archive";
 fetchWeatherApi(url, params).then(responses => {
@@ -30,8 +32,11 @@ fetchWeatherApi(url, params).then(responses => {
 
     // Attributes for timezone and location
     const utcOffsetSeconds = response.utcOffsetSeconds();
+    console.log(utcOffsetSeconds);
     const timezone = response.timezone();
+    console.log(timezone);
     const timezoneAbbreviation = response.timezoneAbbreviation();
+    console.log(timezoneAbbreviation);
     const latitude = response.latitude();
     const longitude = response.longitude();
 

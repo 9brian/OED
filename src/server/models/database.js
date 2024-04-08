@@ -72,6 +72,9 @@ function sqlFile(filePath) {
 async function createSchema(conn) {
 	// We need to require these here instead of at the top to prevent circular dependency issues.
 	/* eslint-disable global-require */
+
+	// TODO: Require WeatherLocation & WeatherData from cold start
+	
 	// const WeatherLocation = require('./WeatherLocation');
 	// const WeatherData = require('./WeatherData');
 	const Meter = require('./Meter');

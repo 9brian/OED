@@ -6,6 +6,7 @@
 
  const sqlFile = database.sqlFile;
  
+ // TODO: WeatherData Class
  class WeatherData {
     
  }
