@@ -92,6 +92,8 @@ async function createSchema(conn) {
 	const Cik = require('./Cik');
 
 	/* eslint-enable global-require */
+	await WeatherLocation.createTable(conn);
+	await WeatherData.createTable(conn);
 	await Unit.createUnitTypesEnum(conn);
 	await Unit.createAreaUnitTypesEnum(conn);
 	await Unit.createDisplayableTypesEnum(conn);
