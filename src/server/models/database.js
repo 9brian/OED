@@ -74,9 +74,9 @@ async function createSchema(conn) {
 	/* eslint-disable global-require */
 
 	// TODO: Require WeatherLocation & WeatherData from cold start
-	
-	// const WeatherLocation = require('./WeatherLocation');
-	// const WeatherData = require('./WeatherData');
+
+	const WeatherLocation = require('./WeatherLocation');
+	const WeatherData = require('./WeatherData');
 	const Meter = require('./Meter');
 	const Reading = require('./Reading');
 	const User = require('./User');
