@@ -65,17 +65,6 @@
      }
  
      /**
-      * Returns a promise to update a weather location's note
-      * @param identifier the identifier of the weather location whose note is to be updated
-      * @param note the new weather locations note
-      * @param conn is the connection to use.
-      * @returns {Promise<void>}
-      */
-     static updateWeatherLocationNote(identifier, note, conn) {
-         return conn.none(sqlFile('weather_location/update_weather_location_note.sql'), { identifier: identifier, note: note });
-     }
- 
-     /**
       * Returns a promise to insert this weather location into the database
       * @param conn is the connection to use.
       * @returns {Promise.<>}
