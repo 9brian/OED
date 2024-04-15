@@ -7,7 +7,6 @@ import { useEffect, useState } from 'react';
 import { Button, Col, Container, FormFeedback, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader, Row } from 'reactstrap';
 import { FormattedMessage } from 'react-intl';
 import '../../styles/modal.css';
-//import { TrueFalseType } from '../../types/items';
 import TooltipMarkerComponent from '../TooltipMarkerComponent';
 import TooltipHelpComponent from '../../components/TooltipHelpComponent';
 //import { UnitRepresentType, DisplayableType, UnitType } from '../../types/redux/units';
@@ -25,6 +24,8 @@ export default function CreateWeatherModalComponent() {
 	const defaultValues = {
 		name: '',
 		identifier: '',
+		longitude: '',
+		latitude: '',
 		note: '',
 		// These two values are necessary but are not used.
 		// The client code makes the id for the selected unit and default graphic unit be -99
@@ -50,14 +51,6 @@ export default function CreateWeatherModalComponent() {
 		setState({ ...state, [e.target.name]: e.target.value });
 	};
 
-	// const handleBooleanChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-	// 	setState({ ...state, [e.target.name]: JSON.parse(e.target.value) });
-	// };
-
-	// const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-	// 	setState({ ...state, [e.target.name]: Number(e.target.value) });
-	// };
-
 
 	// Reset the state to default values
 	const resetState = () => {
@@ -71,6 +64,8 @@ export default function CreateWeatherModalComponent() {
 	const handleSubmit = () => {
 		// Close modal first to avoid repeat clicks
 		setShowModal(false);
+		// Set default identifier as name if left blank
+		state.identifier = (!state.identifier || state.identifier.length === 0) ? state.name : state.identifier;
 		resetState();
 	};
 
@@ -119,6 +114,38 @@ export default function CreateWeatherModalComponent() {
 								onChange={e => handleStringChange(e)}
 								value={state.name}
 								invalid={state.name === ''} />
+							<FormFeedback>
+								<FormattedMessage id="error.required" />
+							</FormFeedback>
+						</FormGroup></Col>
+					</Row>
+					<Row xs='1' lg='2'>
+						{/* Identifier input */}
+						<Col><FormGroup>
+							<Label for='longitude'>{translate('longitude')}</Label>
+							<Input
+								id='longitude'
+								name='longitude'
+								type='text'
+								autoComplete='on'
+								onChange={e => handleStringChange(e)}
+								value={state.longitude}
+								invalid={state.longitude === ''} />
+							<FormFeedback>
+								<FormattedMessage id="error.required" />
+							</FormFeedback>
+						</FormGroup></Col>
+						{/* Name input */}
+						<Col><FormGroup>
+							<Label for='latitude'>{translate('latitude')}</Label>
+							<Input
+								id='latitude'
+								name='latitude'
+								type='text'
+								autoComplete='on'
+								onChange={e => handleStringChange(e)}
+								value={state.latitude}
+								invalid={state.latitude === ''} />
 							<FormFeedback>
 								<FormattedMessage id="error.required" />
 							</FormFeedback>
