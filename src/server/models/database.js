@@ -15,7 +15,6 @@ const pgp = require('pg-promise')({
 const path = require('path');
 const patchMomentType = require('./patch-moment-type');
 const patchPointType = require('./patch-point-type');
-const WeatherLocation = require('./WeatherLocation');
 
 patchMomentType(pgp);
 patchPointType(pgp);
