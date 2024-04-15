@@ -3,13 +3,13 @@
 * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button, Col, Container, FormFeedback, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader, Row } from 'reactstrap';
 import { FormattedMessage } from 'react-intl';
 import '../../styles/modal.css';
 import TooltipMarkerComponent from '../TooltipMarkerComponent';
 import TooltipHelpComponent from '../../components/TooltipHelpComponent';
-//import { UnitRepresentType, DisplayableType, UnitType } from '../../types/redux/units';
+//import { weatherLocationApi } from '../../redux/api/weatherLocationApi';
 import { tooltipBaseStyle } from '../../styles/modalStyle';
 import { useTranslate } from '../../redux/componentHooks';
 //import { showSuccessNotification, showErrorNotification } from '../../utils/notifications';
@@ -19,6 +19,7 @@ import { useTranslate } from '../../redux/componentHooks';
  * @returns Weather create element
  */
 export default function CreateWeatherModalComponent() {
+	//const [submitCreateWeatherLocation] = weatherLocationApi.useAddWeatherLocationMutation();
 	const translate = useTranslate();
 
 	const defaultValues = {
@@ -66,12 +67,13 @@ export default function CreateWeatherModalComponent() {
 		setShowModal(false);
 		// Set default identifier as name if left blank
 		state.identifier = (!state.identifier || state.identifier.length === 0) ? state.name : state.identifier;
+		// submitCreateWeatherLocation(state) # TODO CREATE LOCATION STATE
 		resetState();
 	};
 
 	const tooltipStyle = {
 		...tooltipBaseStyle,
-		tooltipCreateUnitView: 'help.admin.unitcreate'
+		tooltipCreateWeatherView: 'help.admin.weathercreate'
 	};
 
 
@@ -84,12 +86,11 @@ export default function CreateWeatherModalComponent() {
 			<Modal isOpen={showModal} toggle={handleClose} size='lg'>
 				<ModalHeader>
 					<FormattedMessage id="(Need Format) create.weather" />
-					<TooltipHelpComponent page='units-create' />
+					<TooltipHelpComponent page='weather-create' />
 					<div style={tooltipStyle}>
-						<TooltipMarkerComponent page='units-create' helpTextId={tooltipStyle.tooltipCreateUnitView} />
+						<TooltipMarkerComponent page='weather-create' helpTextId={tooltipStyle.tooltipCreateWeatherView} />
 					</div>
 				</ModalHeader>
-				{/* when any of the unit properties are changed call one of the functions. */}
 				<ModalBody><Container>
 					<Row xs='1' lg='2'>
 						{/* Identifier input */}

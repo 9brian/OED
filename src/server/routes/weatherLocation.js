@@ -35,7 +35,7 @@
    * Route for POST add weather location.
    */
   router.post('/addWeatherLocation', async (req, res) => {
-      const validUnit = {
+      const validWeatherLocation = {
           type: 'object',
           required: ['name', 'identifier', 'longitude', 'latitude'],
           properties: {
@@ -49,12 +49,10 @@
                   minLength: 1
               },
               longitude: {
-                type: 'string',
-                minLength: 1
+                type: 'float',
               },
               latitude: {
-                type: 'string',
-                minLength: 1
+                type: 'float',
               },
               note: {
                   oneOf: [
@@ -64,7 +62,7 @@
               }
           }
       };
-      const validationResult = validate(req.body, validUnit);
+      const validationResult = validate(req.body, validWeatherLocation);
       if (!validationResult.valid) {
           log.error(`Got request to edit weather location with invalid weather data, errors: ${validationResult.errors}`);
           failure(res, 400, `Got request to add weather location with invalid weather data, errors: ${validationResult.errors}`);
