@@ -3,9 +3,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 CREATE TABLE IF NOT EXISTS weather_data (
+    weather_location_id INTEGER NOT NULL,
     start_time TIMESTAMP NOT NULL,
     end_time TIMESTAMP,
     temperature FLOAT,
-    weather_location_id INTEGER REFERENCES weather_location(id),
-    PRIMARY KEY (weather_id, start_time)
+    PRIMARY KEY (weather_location_id, start_time),
+    FOREIGN KEY (weather_location_id) REFERENCES weather_location(id)
 );
