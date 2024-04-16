@@ -4,4 +4,4 @@
 
 SELECT * 
 FROM weather_data 
-WHERE weather_id = ${weather_id} AND start_time = '${start_time}';
+WHERE weather_location_id = ${weather_location_id} AND start_time = '${start_time}';
