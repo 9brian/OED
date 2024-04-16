@@ -60,7 +60,7 @@
       * @returns {Promise.<array.<WeatherLocation>>}
       */
      static async getAll(conn) {
-         const rows = await conn.any(sqlFile('weather_location/get_weather_location_by_coordinates.sql'));
+         const rows = await conn.any(sqlFile('weather_location/get_weather_all_weather_locations.sql'));
          return rows.map(row => new WeatherLocation(row.id, row.identifier, row.latitude, row.longitude, row.note));
      }
  
