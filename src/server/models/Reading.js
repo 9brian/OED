@@ -212,6 +212,21 @@ class Reading {
 	}
 
 	/**
+	 * Returns a promise to get the earliest start timestamp from all readings.
+	 * @param conn the database connection to use
+	 * @returns {Promise<Moment>} the earliest start timestamp as a Moment object
+	 */
+	static async getEarliestTimeStamp(conn) {
+		try {
+			const result = await conn.one(sqlFile('reading/get_earliest_timestamp.sql'));
+			return moment(result.earliest_start_timestamp);
+		} catch (err) {
+			log.error(`Error fetching the earliest start timestamp: ${err}`, err);
+			throw err;
+		}
+	}
+
+	/**
 	 * Returns a promise to insert this reading into the database.
 	 * @param conn is the connection to use.
 	 * @returns {Promise.<>}
