@@ -7,6 +7,7 @@ const { mapToObject, threeDHoleAlgorithm } = require('../util');
 const determineMaxPoints = require('../util/determineMaxPoints');
 const _ = require('lodash');
 const log = require('../log');
+const moment = require('moment');
 
 const sqlFile = database.sqlFile;
 
@@ -218,8 +219,7 @@ class Reading {
 	 */
 	static async getEarliestTimeStamp(conn) {
 		try {
-			const result = await conn.one(sqlFile('reading/get_earliest_timestamp.sql'));
-			return moment(result.earliest_start_timestamp);
+			return moment( await conn.one(sqlFile('reading/get_earliest_timestamp.sql')));
 		} catch (err) {
 			log.error(`Error fetching the earliest start timestamp: ${err}`, err);
 			throw err;
