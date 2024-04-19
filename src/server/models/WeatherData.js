@@ -43,6 +43,20 @@
     }
 
     /**
+     * Returns a promise to get the latest end timestamp from all weather data.
+     * @param conn the database connection to use
+     * @returns {Promise<Moment>} the latest end timestamp as a Moment object
+     */
+    static async getLatestTimeStamp(conn) {
+      try {
+        return moment( await conn.one(sqlFile('weather_data/get_latest_timestamp.sql')));
+      } catch (err) {
+        log.error(`Error fetching the latest end timestamp: ${err}`, err);
+        throw err;
+      }
+    }
+
+    /**
       * Returns a promise to insert this weather data entry into the database
       * @param conn is the connection to use.
       * @returns {Promise.<>}
