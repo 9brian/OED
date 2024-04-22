@@ -74,8 +74,18 @@
          if (weatherLocation.id !== undefined) {
              throw new Error('Attempted to insert a weatherLocation that already has an ID');
          }
-         return await conn.none(sqlFile('weather_location/insert_new_weather_location.sql'), weatherLocation);
+         await conn.none(sqlFile('weather_location/insert_new_weather_location.sql'), weatherLocation);
      }
+
+     /**
+	 * Returns a promise to delete a weather location
+	 * @param id The ID of the weather location to be deleted
+	 * @param conn the connection to be used.
+	 * @returns {Promise.<void>}
+	 */
+	static async delete(id, conn) {
+		await conn.none(sqlFile('weather_location/delete_weather_location.sql'), { id: id });
+	}
  }
  
  module.exports = WeatherLocation;

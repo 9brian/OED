@@ -4,7 +4,6 @@
 
 export interface WeatherLocationData {
 	id: number;
-	name: string;
 	identifier: string;
 	longitude: number;
 	latitude: number;
@@ -13,7 +12,6 @@ export interface WeatherLocationData {
 
 export interface WeatherLocationEditData {
 	id: number;
-	name: string;
 	identifier: string;
 	longitude: number;
 	latitude: number;

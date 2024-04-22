@@ -74,6 +74,6 @@ CREATE TABLE IF NOT EXISTS meters (
     disable_checks BOOLEAN DEFAULT false
 );
 
--- Include weather_location_id to meter table
+-- TODO: Include weather_location_id to meter table
 -- ALTER TABLE meters
 -- ADD COLUMN weather_location_id INTEGER REFERENCES weather_location(id);

@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS groups (
 	area_unit area_unit_type NOT NULL DEFAULT 'none'
 );
 
--- Add weather_location_id column to groups table
+-- TODO: Add weather_location_id column to groups table
 -- ALTER TABLE groups
 -- ADD COLUMN weather_location_id INT REFERENCES weather_location(id);
 

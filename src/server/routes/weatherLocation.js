@@ -49,12 +49,10 @@
                   minLength: 1
               },
               longitude: {
-                  type: 'string',
-                  minLength: 1
+                  type: 'number',
               },
               latitude: {
-                  type: 'string',
-                  minLength: 1
+                  type: 'number',
               },
               note: {
                   oneOf: [
@@ -76,8 +74,8 @@
                       undefined, // id
                       //req.body.name,
                       req.body.identifier,
-                      parseFloat(req.body.latitude),
-                      parseFloat(req.body.longitude),
+                      req.body.latitude,
+                      req.body.longitude,
                       req.body.note
                   );
                   await newLocation.insert(t);

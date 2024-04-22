@@ -2,7 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-
-  INSERT INTO weather_location(identifier, latitude, longitude, note)
-  VALUES (${identifier}, ${latitude}, ${longitude}, ${note});
-
+SELECT * 
+FROM weather_data 
+WHERE weather_location_id = ${weather_location_id} AND start_time = '${start_time}';
