@@ -13,7 +13,7 @@
   
   function formatWeatherLocationForResponse(item) {
       return {
-          id: item.id, name: item.name, identifier: item.identifier,
+          id: item.id, identifier: item.identifier,
           longitude: item.longitude, latitude: item.latitude, note: item.note
       };
   }
@@ -40,10 +40,6 @@
           required: ['identifier', 'longitude', 'latitude'],
           properties: {
               // Removed id from properties list since it is set to undefined no matter what is passed.
-            //   name: {
-            //       type: 'string',
-            //       minLength: 1
-            //   },
               identifier: {
                   type: 'string',
                   minLength: 1
@@ -72,7 +68,6 @@
               await conn.tx(async t => {
                   const newLocation = new WeatherLocation(
                       undefined, // id
-                      //req.body.name,
                       req.body.identifier,
                       req.body.latitude,
                       req.body.longitude,

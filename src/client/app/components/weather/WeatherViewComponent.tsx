@@ -51,7 +51,7 @@ export default function WeatherViewComponent(props: WeatherViewComponentProps) {
 			</div>
 			<div className="edit-btn">
 				<Button color='secondary' onClick={handleShow}>
-					<FormattedMessage id="edit.unit" />
+					<FormattedMessage id="edit.weather.location" />
 				</Button>
 				{/* Creates a child UnitModalEditComponent */}
 				<EditWeatherModalComponent

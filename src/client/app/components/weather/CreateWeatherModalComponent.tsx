@@ -106,11 +106,11 @@ export default function CreateWeatherModalComponent() {
 	return (
 		<>
 			<Button color='secondary' onClick={handleShow}>
-				<FormattedMessage id="(Need Format) create.weather" />
+				<FormattedMessage id="create.weather" />
 			</Button>
 			<Modal isOpen={showModal} toggle={handleClose} size='lg'>
 				<ModalHeader>
-					<FormattedMessage id="(Need Format) create.weather" />
+					<FormattedMessage id="create.weather" />
 					<TooltipHelpComponent page='weather-create' />
 				</ModalHeader>
 				<ModalBody>
