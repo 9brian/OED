@@ -37,22 +37,24 @@
   router.post('/addWeatherLocation', async (req, res) => {
       const validWeatherLocation = {
           type: 'object',
-          required: ['name', 'identifier', 'longitude', 'latitude'],
+          required: ['identifier', 'longitude', 'latitude'],
           properties: {
               // Removed id from properties list since it is set to undefined no matter what is passed.
-              name: {
-                  type: 'string',
-                  minLength: 1
-              },
+            //   name: {
+            //       type: 'string',
+            //       minLength: 1
+            //   },
               identifier: {
                   type: 'string',
                   minLength: 1
               },
               longitude: {
-                type: 'float',
+                  type: 'string',
+                  minLength: 1
               },
               latitude: {
-                type: 'float',
+                  type: 'string',
+                  minLength: 1
               },
               note: {
                   oneOf: [
@@ -72,10 +74,10 @@
               await conn.tx(async t => {
                   const newLocation = new WeatherLocation(
                       undefined, // id
-                      req.body.name,
+                      //req.body.name,
                       req.body.identifier,
-                      req.body.longitude,
-                      req.body.latitude,
+                      parseFloat(req.body.latitude),
+                      parseFloat(req.body.longitude),
                       req.body.note
                   );
                   await newLocation.insert(t);
