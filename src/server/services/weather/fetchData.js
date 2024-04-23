@@ -21,7 +21,7 @@ function fetchWeatherData(latitude, longitude, startDate, endDate) {
         "end_date": endDate,
         "hourly": "temperature_2m",
         "temperature_unit": "fahrenheit",
-        "timezone": "America/Los_Angeles"
+        "timezone": "America/Los_Angeles" // TODO: should not be static
     };
     const url = "https://archive-api.open-meteo.com/v1/archive";
 
