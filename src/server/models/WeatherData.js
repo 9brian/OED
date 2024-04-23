@@ -31,18 +31,6 @@
     }
 
     /**
-      * Returns a promise to retrieve the weather data by the primary key
-      * @param conn is the connection to use.
-      * @param weather_location_id
-      * @param start_time
-      * @returns {Promise.<WeatherData>}
-      */
-    static async getByPrimaryKey(weather_location_id, start_time, conn) {
-        const row = await conn.one(sqlFile('weather_data/get_weather_data_by_id_and_start_time.sql'), { weather_location_id: weather_location_id, start_time: start_time});
-        return new WeatherData(row.weather_location_id, row.start_time, row.end_time, row.temperature);
-    }
-
-    /**
      * Returns a promise to get the latest end timestamp from all weather data.
      * @param conn the database connection to use
      * @returns {Promise<Moment>} the latest end timestamp as a Moment object
