@@ -4,4 +4,4 @@
 
 SELECT *
 FROM weather_location
-WHERE latitude = ${latitude} AND longitude = ${longitude};
+WHERE gps = ${gps};
