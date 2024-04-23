@@ -10,15 +10,15 @@
      /**
       * @param id This weather location's ID. 
       * @param identifier This weather location's identifier
-      * @param longitude The weather locations's longitude
-      * @param latitude The weather locations's latitude
+      * @param latitude The weather locations's longitude
+      * @param longitude The weather locations's latitude
       * @param note The weather location's note
       */
-     constructor(id, identifier, longitude, latitude, note) {
+     constructor(id, identifier, latitude, longitude, note) {
          this.id = id;
          this.identifier = identifier
-         this.longitude = longitude;
          this.latitude = latitude;
+         this.longitude = longitude;
          this.note = note;
      }
  
@@ -39,19 +39,19 @@
       */
      static async getByID(id, conn) {
          const row = await conn.one(sqlFile('weather_location/get_weather_location_by_id.sql'), { id: id });
-         return new WeatherLocation(row.id, row.identifier, row.longitude, row.latitude, row.note);
+         return new WeatherLocation(row.id, row.identifier, row.latitude, row.longitude, row.note);
      }
  
      /**
       * Returns a promise to retrieve the weather location with the given coordinates from the database.
-      * @param longitude the longitude to look up
       * @param latitude the latitude to look up
+      * @param longitude the longitude to look up
       * @param conn the connection to use.
       * @returns {Promise.<WeatherLocation>} either the weather_location object with info or null if does not exist.
       */
-     static async getByCoordinates(longitude, latitude, conn) {
-         const row = await conn.oneOrNone(sqlFile('weather_location/get_weather_location_by_coordinates.sql'), { longitude: longitude, latitude : latitude });
-         return row === null ? null : new WeatherLocation(row.id, row.identifier, row.longitude, row.latitude, row.note);
+     static async getByCoordinates(latitude, longitude, conn) {
+         const row = await conn.oneOrNone(sqlFile('weather_location/get_weather_location_by_coordinates.sql'), { latitude: latitude, longitude : longitude });
+         return row === null ? null : new WeatherLocation(row.id, row.identifier, row.latitude, row.longitude, row.note);
      }
  
      /**
