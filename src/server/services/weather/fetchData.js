@@ -25,14 +25,14 @@ function fetchWeatherData(latitude, longitude, startDate, endDate) {
     };
     const url = "https://archive-api.open-meteo.com/v1/archive";
 
-    fetchWeatherApi(url, params).then(responses => {
+    return fetchWeatherApi(url, params).then(responses => {
         const response = responses[0];
         const utcOffsetSeconds = response.utcOffsetSeconds();
-        console.log(utcOffsetSeconds);
+        // console.log(utcOffsetSeconds);
         const timezone = response.timezone();
-        console.log(timezone);
+        // console.log(timezone);
         const timezoneAbbreviation = response.timezoneAbbreviation();
-        console.log(timezoneAbbreviation);
+        // console.log(timezoneAbbreviation);
         const latitude = response.latitude();
         const longitude = response.longitude();
 
@@ -51,16 +51,31 @@ function fetchWeatherData(latitude, longitude, startDate, endDate) {
             },
         };
 
-        for (let i = 0; i < weatherData.hourly.time.length; i++) {
-            console.log(
-                weatherData.hourly.time[i].toISOString(),
-                weatherData.hourly.temperature2m[i]
-            );
-        }
+        // for (let i = 0; i < weatherData.hourly.time.length; i++) {
+        //     console.log(
+        //         weatherData.hourly.time[i].toISOString(),
+        //         weatherData.hourly.temperature2m[i]
+        //     );
+        // }
+        // Instead of logging, return the formatted weather data
+        return weatherData.hourly.time.map((time, index) => ({
+            time: time,
+            temperature: weatherData.hourly.temperature2m[index]
+        }));
     }).catch(err => {
         console.error('Error fetching weather data:', err);
     });
 }
 
 // Example usage of the function
-// fetchWeatherData(36.6537, 121.799, "2024-04-20", moment().subtract(3, 'days').format('YYYY-MM-DD'));
+// const latitude = 36.6537;
+// const longitude = 121.799;
+// const startDate = '2024-04-20'; // Use an actual date that makes sense for your data
+// const endDate = moment().subtract(3, 'days').format('YYYY-MM-DD');
+// fetchWeatherData(latitude, longitude, startDate, endDate)
+//   .then(data => {
+//     console.log('Weather Data:', data);
+//   })
+//   .catch(error => {
+//     console.error('Error fetching weather data:', error);
+//   });
