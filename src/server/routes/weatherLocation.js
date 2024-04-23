@@ -6,6 +6,8 @@
   const { log } = require('../log');
   const { getConnection } = require('../db');
   const WeatherLocation = require('../models/WeatherLocation');
+  const moment = require('moment');
+  const Reading = require('../models/Reading');
   const validate = require('jsonschema').validate;
   const { success, failure } = require('./response');
   
@@ -75,6 +77,25 @@
                   );
                   await newLocation.insert(t);
               });
+
+            //   const earliestMoment = await Reading.getEarliestTimeStamp(conn);
+                  
+            //   const earliestDate = earliestMoment.format('YYYY-MM-DD');
+            //   const latestDate = moment().subtract(3, 'days').format('YYYY-MM-DD');
+
+            //   const weatherData = fetchWeatherData(newLocation.latitude, newLocation.longitude, earliestDate, latestDate);
+
+            //   // Assuming weatherData is an array of {time, temperature}
+            //   for (const data of weatherData) {
+            //     const newData = new WeatherData({
+            //         weather_location_id: newLocation.id,  // Assuming this ID is returned or accessible after insertion
+            //         start_time: data.time,
+            //         end_time: latestDate,  // Assuming end_time is the 3 days ago (this might need to be changed)
+            //         temperature: data.temperature
+            //     });
+            //     await newData.insert(t);
+            // }
+
               success(res);
           } catch (err) {
               log.error(`Error while inserting new weather location ${err}`, err);
