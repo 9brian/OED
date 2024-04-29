@@ -56,7 +56,7 @@ export default function WeatherViewComponent(props: WeatherViewComponentProps) {
 				{/* Creates a child UnitModalEditComponent */}
 				<EditWeatherModalComponent
 					show={showEditModal}
-					weather={props.weather}
+					location={props.weather}
 					handleClose={handleClose} />
 			</div>
 		</div>

@@ -37,9 +37,15 @@ export const weatherLocationApi = baseApi.injectEndpoints({
 				body: { id: weatherLocationId }
 			}),
 			invalidatesTags: ['WeatherLocation']
+		}),
+		editLocation: builder.mutation<void, { editedLocation: WeatherLocationData}>({
+			query: ({ editedLocation }) => ({
+				url: 'api/weatherLocation/edit',
+				method: 'POST',
+				body: { ...editedLocation }
+			}),
+			invalidatesTags: ['WeatherLocation']
 		})
-
-		// TODO: EDIT WEATHER LOCATION
 	})
 });
 

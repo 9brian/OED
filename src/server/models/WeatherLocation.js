@@ -76,6 +76,20 @@
          }
          await conn.none(sqlFile('weather_location/insert_new_weather_location.sql'), weatherLocation);
      }
+     
+     /**
+	 * Returns a promise to update an existing location in the database.
+	 * @param {*} conn The connection to use.
+	 * @returns {Promise.<>}
+	 */
+	async update(conn) {
+		const weatherLocation = this;
+		if (weatherLocation.id === undefined) {
+			throw new Error('Attempt to update a location with no ID');
+		}
+		await conn.none(sqlFile('weather_location/update_location.sql'), weatherLocation);
+	}
+
 
      /**
 	 * Returns a promise to delete a weather location

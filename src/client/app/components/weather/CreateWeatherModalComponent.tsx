@@ -4,7 +4,7 @@
 
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { Button, Col, Container, FormFeedback, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader, Row } from 'reactstrap';
+import { Button, Container, FormFeedback, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
 import { FormattedMessage } from 'react-intl';
 import '../../styles/modal.css';
 import TooltipMarkerComponent from '../TooltipMarkerComponent';
@@ -13,6 +13,7 @@ import { weatherLocationApi } from '../../redux/api/weatherLocationApi';
 import { tooltipBaseStyle } from '../../styles/modalStyle';
 import { useTranslate } from '../../redux/componentHooks';
 import { showSuccessNotification, showErrorNotification } from '../../utils/notifications';
+import { GPSPoint, isValidGPSInput } from '../../utils/calibration';
 
 /**
  * Defines the create weather modal form
@@ -24,8 +25,7 @@ export default function CreateWeatherModalComponent() {
 
 	const defaultValues = {
 		identifier: '',
-		longitude: '',
-		latitude: '',
+		gps: '',
 		note: '',
 		// The client code makes the id for the selected unit and default graphic unit be -99
 		id: -99
@@ -48,14 +48,13 @@ export default function CreateWeatherModalComponent() {
 
 	/* Create Weather Location Validation:
 		Identifier cannot be blank
-		Longitude cannot be blank
-		Latitude cannot be blank
+		Gps cannot be blank
 	*/
 
 	const [validUnit, setValidUnit] = useState(false);
 	useEffect(() => {
-		setValidUnit(state.identifier !== '' && state.longitude !== '' && state.latitude !== '');
-	}, [state.identifier, state.longitude, state.latitude]);
+		setValidUnit(state.identifier !== '' && state.gps !== '' );
+	}, [state.identifier, state.gps]);
 
 	const resetState = () => {
 		setState(defaultValues);
@@ -66,35 +65,55 @@ export default function CreateWeatherModalComponent() {
 		// Close modal first to avoid repeat clicks
 		setShowModal(false);
 
-		// Regular expression that check for a floating point format
-		const longitudeRegex = /^-?\d+\.\d+$/;
-		const latitudeRegex = /^-?\d+\.\d+$/;
+		let inputOk = true;
+		const gpsInput = state.gps;
 
-		// Test to see if the regex matches a floating point format
-		if (!longitudeRegex.test(state.longitude) || !latitudeRegex.test(state.latitude)) {
-			showErrorNotification('Longitude and latitude must be valid floating-point numbers.');
-			return;
+		let gps: GPSPoint | null = null;
+
+		const latitudeIndex = 0;
+		const longitudeIndex = 1;
+
+		// If the user input a value then gpsInput should be a string.
+		// null came from the DB and it is okay to just leave it - Not a string.
+		if (typeof gpsInput === 'string') {
+			if (isValidGPSInput(gpsInput)) {
+				const gpsValues = gpsInput.split(',').map(value => parseFloat(value));
+				// It is valid and needs to be in this format for routing.
+				gps = {
+					longitude: gpsValues[longitudeIndex],
+					latitude: gpsValues[latitudeIndex]
+				};
+			} else if (gpsInput.length !== 0) {
+				// GPS not okay. Only true if some input.
+				// TODO isValidGPSInput currently pops up an alert so not doing it here, may change
+				// so leaving code commented out.
+				// showErrorNotification(translate('input.gps.range') + state.gps + '.');
+				inputOk = false;
+			}
 		}
-
 		// Convert longitude and latitude to numbers
-		const longitude = parseFloat(state.longitude);
-		const latitude = parseFloat(state.latitude);
-
+		const longitude = typeof gps?.longitude === 'number' ? parseFloat(gps.longitude.toString()) : 0;
+		const latitude = typeof gps?.latitude === 'number' ? parseFloat(gps.latitude.toString()) : 0;
 
 		// Submit the form with updated state
-		submitCreateWeatherLocation({
-			...state,
-			longitude,
-			latitude
-		})
-			.unwrap()
-			.then(()=> {
-				showSuccessNotification(translate('weather.successfully.create.location'));
+		if(inputOk) {
+			submitCreateWeatherLocation({
+				...state,
+				longitude,
+				latitude
 			})
-			.catch(() => {
-				showErrorNotification(translate('weather.failed.to.create.location'));
-			});
-		resetState();
+				.unwrap()
+				.then(()=> {
+					showSuccessNotification(translate('weather.successfully.create.location'));
+				})
+				.catch(() => {
+					showErrorNotification(translate('weather.failed.to.create.location'));
+				});
+			resetState();
+		} else {
+			// Tell user that not going to update due to input issues.
+			showErrorNotification(translate('weather.input.error'));
+		}
 	};
 
 
@@ -129,40 +148,20 @@ export default function CreateWeatherModalComponent() {
 								<FormattedMessage id="error.required" />
 							</FormFeedback>
 						</FormGroup>
-						<Row xs='1' lg='2'>
-							<Col>
-								<FormGroup>
-									<Label for='longitude'>{translate('longitude')}</Label>
-									<Input
-										id='longitude'
-										name='longitude'
-										type='text'
-										autoComplete='on'
-										onChange={e => handleStringChange(e)}
-										value={state.longitude.toString()}
-										invalid={state.longitude == ''} />
-									<FormFeedback>
-										<FormattedMessage id="error.required" />
-									</FormFeedback>
-								</FormGroup>
-							</Col>
-							<Col>
-								<FormGroup>
-									<Label for='latitude'>{translate('latitude')}</Label>
-									<Input
-										id='latitude'
-										name='latitude'
-										type='text'
-										autoComplete='on'
-										onChange={e => handleStringChange(e)}
-										value={state.latitude.toString()}
-										invalid={state.latitude == ''} />
-									<FormFeedback>
-										<FormattedMessage id="error.required" />
-									</FormFeedback>
-								</FormGroup>
-							</Col>
-						</Row>
+						<FormGroup>
+							<Label for='gps'>{translate('gps')}</Label>
+							<Input
+								id='gps'
+								name='gps'
+								type='text'
+								autoComplete='on'
+								onChange={e => handleStringChange(e)}
+								value={state.gps.toString()}
+								invalid={state.gps == ''} />
+							<FormFeedback>
+								<FormattedMessage id="error.required" />
+							</FormFeedback>
+						</FormGroup>
 						<FormGroup>
 							<Label for='note'>{translate('note')}</Label>
 							<Input

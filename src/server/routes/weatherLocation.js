@@ -137,6 +137,54 @@
           success(res, 'Successfully deleted conversion');
       }
   });
+
+  /**
+ * Route for POST, edit location.
+ */
+router.post('/edit', async (req, res) => {
+	const validLocation = {
+		type: 'object',
+		required: ['id', 'identifier'],
+		properties: {
+			id: {
+				type: 'integer'
+			},
+			identifier: {
+				type: 'string'
+			},
+            longitude: {
+                type: 'number',
+            },
+            latitude: {
+                type: 'number',
+            },
+			note: {
+	            type: 'string',
+  
+			}
+		}
+	};
+
+	const validatorResult = validate(req.body, validLocation);
+	if (!validatorResult.valid) {
+		log.warn(`Got request to edit location with invalid data, errors:${validatorResult.errors}`);
+        failure(res, 400, `Got request to edit location with invalid data, errors:${validatorResult.errors}`);
+	} else {
+		const conn = getConnection();
+		try {
+			const location = await WeatherLocation.getByID(req.body.id, conn);
+			location.identifier = req.body.identifier;
+            location.longitude = req.body.longitude;
+			location.latitude = req.body.latitude;
+			location.note = req.body.note;
+			await location.update(conn);
+		} catch (err) {
+			log.error('Failed to edit location', err);
+            failure(res, 500, 'Unable to edit location ' + err.toString());
+		}
+		success(res, `Successfully edited location`);
+	}
+});
   
   module.exports = router;
   
