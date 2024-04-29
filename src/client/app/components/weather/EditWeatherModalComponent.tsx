@@ -1,7 +1,3 @@
-/* This Source Code Form is subject to the terms of the Mozilla Public
-* License, v. 2.0. If a copy of the MPL was not distributed with this
-* file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
@@ -12,10 +8,9 @@ import { useTranslate } from '../../redux/componentHooks';
 import '../../styles/modal.css';
 import { tooltipBaseStyle } from '../../styles/modalStyle';
 import { WeatherLocationData} from '../../types/redux/weather';
-import { showErrorNotification, showSuccessNotification } from '../../utils/notifications';
+import { showErrorNotification, showSuccessNotification, showInfoNotification } from '../../utils/notifications';
 import TooltipMarkerComponent from '../TooltipMarkerComponent';
 import { GPSPoint, isValidGPSInput } from '../../utils/calibration';
-
 
 interface EditWeatherModalComponentProps {
 	show: boolean;
@@ -52,17 +47,14 @@ export default function EditWeatherModalComponent(props: EditWeatherModalCompone
 	};
 
 	const handleDeleteLocation = () => {
-		deleteLocation(state.id)
-			.unwrap()
-			.then(() => { showSuccessNotification(translate('unit.delete.success')); })
-			.catch(error => { showErrorNotification(translate('unit.delete.failure') + error.data); });
-
+		// Open delete confirmation modal
+		setOpenDeleteConfirmation(true);
 	};
 
 	/* Edit WeatherLocation Validation:
-		Identifier cannot be blank
-		GPS cannot be blank
-	*/
+        Identifier cannot be blank
+        GPS cannot be blank
+    */
 	const [validLocation, setValidLocation] = useState(false);
 	useEffect(() => {
 		setValidLocation(state.identifier !== '' && state.gps !== '');
@@ -99,7 +91,6 @@ export default function EditWeatherModalComponent(props: EditWeatherModalCompone
 		// Objects are equal
 		return true;
 	};
-
 
 	// Save changes
 	// Currently using the old functionality which is to compare inherited prop values to state values
@@ -159,76 +150,101 @@ export default function EditWeatherModalComponent(props: EditWeatherModalCompone
 						showErrorNotification(translate('weather.failed.to.edit.location'));
 					});
 			}
+		} else {
+			showInfoNotification(translate('weather.location.no.changes'));
 		}
 	};
 
+	// Delete Confirmation Modal
+	const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState(false);
+
+	const handleDeleteConfirmation = () => {
+		deleteLocation(state.id)
+			.unwrap()
+			.then(() => {
+				showSuccessNotification(translate('weather-location.delete.success'));
+				handleClose();
+			})
+			.catch(error => {
+				showErrorNotification(translate('weather-location.delete.failure') + error.data);
+			});
+	};
+	// Toggles Delete Warning Modal
+	const toggleDeleteConfirmation = () => {
+		setOpenDeleteConfirmation(!openDeleteConfirmation);
+	};
 
 	const tooltipStyle = {
 		...tooltipBaseStyle,
 		tooltipEditWeatherLocationView: 'help.admin.weather-location-edit'
 	};
 
+
 	return (
 		<>
-			<Modal isOpen={props.show} toggle={props.handleClose} size='lg'>
+			{/* Main Edit Modal */}
+			<Modal isOpen={props.show} toggle={handleClose} size='lg'>
 				<ModalHeader>
-					<FormattedMessage id="edit.weatherLocation" />
+					<FormattedMessage id="edit.weather.location" />
 					<TooltipHelpComponent page='weatherLocation-edit' />
 					<div style={tooltipStyle}>
 						<TooltipMarkerComponent page='weatherLocation-edit' helpTextId={tooltipStyle.tooltipEditWeatherLocationView} />
 					</div>
 				</ModalHeader>
-				{/* when any of the unit are changed call one of the functions. */}
-				<ModalBody><Container>
-					{/* Identifier input */}
-					<FormGroup>
-						<Label for='identifier'>{translate('identifier')}</Label>
-						<Input
-							id='identifier'
-							name='identifier'
-							type='text'
-							autoComplete='on'
-							onChange={e => handleStringChange(e)}
-							value={state.identifier}
-							placeholder='Identifier'
-							invalid={state.identifier === ''}
-						/>
-						<FormFeedback>
-							<FormattedMessage id="error.required" />
-						</FormFeedback>
-					</FormGroup>
-					{/* Gps input */}
-					<FormGroup>
-						<Label for='gps'>{translate('gps')}</Label>
-						<Input
-							id='gps'
-							name='gps'
-							type='text'
-							autoComplete='on'
-							onChange={e => handleStringChange(e)}
-							value={state.gps}
-							placeholder='gps'
-							invalid={state.gps === ''}
-						/>
-						<FormFeedback>
-							<FormattedMessage id="error.required" />
-						</FormFeedback>
-					</FormGroup>
-					{/* Note input */}
-					<FormGroup>
-						<Label for='note'>{translate('unit')}</Label>
-						<Input
-							id='note'
-							name='note'
-							type='textarea'
-							value={state.note}
-							placeholder='Note'
-							onChange={e => handleStringChange(e)} />
-					</FormGroup>
-				</Container></ModalBody>
+				{/* Main Modal Content */}
+				<ModalBody>
+					<Container>
+						{/* Identifier input */}
+						<FormGroup>
+							<Label for='identifier'>{translate('identifier')}</Label>
+							<Input
+								id='identifier'
+								name='identifier'
+								type='text'
+								autoComplete='on'
+								onChange={e => handleStringChange(e)}
+								value={state.identifier}
+								placeholder='Identifier'
+								invalid={state.identifier === ''}
+							/>
+							<FormFeedback>
+								<FormattedMessage id="error.required" />
+							</FormFeedback>
+						</FormGroup>
+						{/* Gps input */}
+						<FormGroup>
+							<Label for='gps'>{translate('gps')}</Label>
+							<Input
+								id='gps'
+								name='gps'
+								type='text'
+								autoComplete='on'
+								onChange={e => handleStringChange(e)}
+								value={state.gps}
+								placeholder='gps'
+								disabled={true}
+							/>
+							<FormFeedback>
+								<FormattedMessage id="error.required" />
+							</FormFeedback>
+						</FormGroup>
+						{/* Note input */}
+						<FormGroup>
+							<Label for='note'>{translate('note')}</Label>
+							<Input
+								id='note'
+								name='note'
+								type='textarea'
+								value={state.note}
+								placeholder='Note'
+								onChange={e => handleStringChange(e)}
+							/>
+						</FormGroup>
+					</Container>
+				</ModalBody>
 				<ModalFooter>
 					<Button variant="warning" color='danger' onClick={handleDeleteLocation}>
-						<FormattedMessage id="weather-location.delete.unit" />
+						<FormattedMessage id="weather.delete.location" />
 					</Button>
 					{/* Hides the modal */}
 					<Button color='secondary' onClick={handleClose}>
@@ -237,6 +253,28 @@ export default function EditWeatherModalComponent(props: EditWeatherModalCompone
 					{/* On click calls the function handleSaveChanges in this component */}
 					<Button color='primary' onClick={handleSaveChanges} disabled={!validLocation}>
 						<FormattedMessage id="save.all" />
+					</Button>
+				</ModalFooter>
+			</Modal>
+
+			{/* Delete Confirmation Modal */}
+			<Modal isOpen={openDeleteConfirmation} toggle={toggleDeleteConfirmation}>
+				<ModalHeader>
+					<FormattedMessage id="delete.weather-location" />
+					<TooltipHelpComponent page='weatherLocation-edit' />
+					<div style={tooltipStyle}>
+						<TooltipMarkerComponent page='weatherLocation-edit' helpTextId={tooltipStyle.tooltipEditWeatherLocationView} />
+					</div>
+				</ModalHeader>
+				<ModalBody>
+					<FormattedMessage id="confirm.delete.weather-location" />
+				</ModalBody>
+				<ModalFooter>
+					<Button color="danger" onClick={handleDeleteConfirmation}>
+						<FormattedMessage id="delete" />
+					</Button>
+					<Button color="secondary" onClick={toggleDeleteConfirmation}>
+						<FormattedMessage id="cancel" />
 					</Button>
 				</ModalFooter>
 			</Modal>
