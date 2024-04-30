@@ -10,15 +10,13 @@
      /**
       * @param id This weather location's ID. 
       * @param identifier This weather location's identifier
-      * @param longitude The weather locations's longitude
-      * @param latitude The weather locations's latitude
+      * @param gps in format of GIS coordinates
       * @param note The weather location's note
       */
-     constructor(id, identifier, longitude, latitude, note) {
+     constructor(id, identifier, gps, note) {
          this.id = id;
-         this.identifier = identifier
-         this.longitude = longitude;
-         this.latitude = latitude;
+         this.identifier = identifier;
+         this.gps = gps;
          this.note = note;
      }
  
@@ -39,19 +37,30 @@
       */
      static async getByID(id, conn) {
          const row = await conn.one(sqlFile('weather_location/get_weather_location_by_id.sql'), { id: id });
-         return new WeatherLocation(row.id, row.identifier, row.longitude, row.latitude, row.note);
+
+         return WeatherLocation.mapRow(row);
      }
  
      /**
       * Returns a promise to retrieve the weather location with the given coordinates from the database.
-      * @param longitude the longitude to look up
-      * @param latitude the latitude to look up
+      * @param gps the gps to look up
       * @param conn the connection to use.
       * @returns {Promise.<WeatherLocation>} either the weather_location object with info or null if does not exist.
       */
-     static async getByCoordinates(longitude, latitude, conn) {
-         const row = await conn.oneOrNone(sqlFile('weather_location/get_weather_location_by_coordinates.sql'), { longitude: longitude, latitude : latitude });
-         return row === null ? null : new WeatherLocation(row.id, row.identifier, row.longitude, row.latitude, row.note);
+     static async getByGPS(gps, conn) {
+         const row = await conn.oneOrNone(sqlFile('weather_location/get_weather_location_by_gps.sql'), { gps: gps });
+         return WeatherLocation.mapRow(row);
+     }
+
+     /**
+      * Creates a new weather location from the data in a row.
+      * @param row the row from which the weather location is to be created
+      * @returns Weather Location from row
+      */
+
+     static mapRow(row) {
+        var weatherLocation = new WeatherLocation(row.id, row.identifier, row.gps, row.note);
+        return weatherLocation;
      }
  
      /**
@@ -60,19 +69,8 @@
       * @returns {Promise.<array.<WeatherLocation>>}
       */
      static async getAll(conn) {
-         const rows = await conn.any(sqlFile('weather_location/get_weather_location_by_coordinates.sql'));
-         return rows.map(row => new WeatherLocation(row.id, row.identifier, row.latitude, row.longitude, row.note));
-     }
- 
-     /**
-      * Returns a promise to update a weather location's note
-      * @param identifier the identifier of the weather location whose note is to be updated
-      * @param note the new weather locations note
-      * @param conn is the connection to use.
-      * @returns {Promise<void>}
-      */
-     static updateWeatherLocationNote(identifier, note, conn) {
-         return conn.none(sqlFile('weather_location/update_weather_location_note.sql'), { identifier: identifier, note: note });
+         const rows = await conn.any(sqlFile('weather_location/get_weather_all_weather_locations.sql'));
+         return rows.map(WeatherLocation.mapRow)
      }
  
      /**

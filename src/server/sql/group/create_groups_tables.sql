@@ -13,10 +13,6 @@ CREATE TABLE IF NOT EXISTS groups (
 	area_unit area_unit_type NOT NULL DEFAULT 'none'
 );
 
--- Add weather_location_id column to groups table
--- ALTER TABLE groups
--- ADD COLUMN weather_location_id INT REFERENCES weather_location(id);
-
 /*
   The groups_immediate_children table holds the edges of the DAG.
   It ensures that no group points to itself (DAGs don't have self-references).
